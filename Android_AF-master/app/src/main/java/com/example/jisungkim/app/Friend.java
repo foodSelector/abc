@@ -33,4 +33,12 @@ public class Friend extends AppCompatActivity {
         ListView list=(ListView)findViewById(R.id.list_item);
         list.setAdapter(adapter);
     }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent intent = new Intent(Friend.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 }

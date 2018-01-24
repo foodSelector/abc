@@ -42,12 +42,12 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
     String text3;
     String text4;
 
+    int a;
     private List<String> lat = new ArrayList<>();;
     private List<String> lon = new ArrayList<>();;
 
     boolean clickCheck = false;
     @BindView(R.id.fab_gps) FloatingActionButton fab_gps;
-
 
     private static final String LOG_TAG = "LocationDemoActivity";
     /*private MapPoint DEFAULT_MARKER_POINT = MapPoint.mapPointWithGeoCoord(lat, lon);*/
@@ -110,10 +110,6 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         Intent intent= getIntent();
         ArrayList<MyItem> arItem=new ArrayList();
 
-
-
-
-
         String text = intent.getStringExtra("a1");
         String text2=intent.getStringExtra("a2");
         String text3=intent.getStringExtra("a3");
@@ -131,6 +127,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         MyList.setAdapter(MyAdapter);
 
         MyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 /**
@@ -140,16 +137,30 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
  * @param position 클릭 한 Item의 position
  * @param id 클릭 된 Item의 Id
  */
-                ImageButton btn=(ImageButton)view.findViewById(R.id.btn);
-                btn.setVisibility(View.VISIBLE);
-
+                ImageButton btn = (ImageButton) view.findViewById(R.id.btn);
+         if(btn.getVisibility()==View.INVISIBLE) {
+             btn.setVisibility(View.VISIBLE);
+             btn.setFocusable(false);
+         }
+         else {
+             btn.setVisibility(View.INVISIBLE);
+             btn.setFocusable(false);
+         }
             }
         });
+
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent intent = new Intent(Alone.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
