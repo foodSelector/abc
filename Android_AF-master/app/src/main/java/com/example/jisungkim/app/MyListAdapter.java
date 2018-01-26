@@ -31,10 +31,14 @@ public class MyListAdapter extends BaseAdapter {
     public int getCount(){
         return arSrc.size();
     }
-    public String getItem(int position){
-        return arSrc.get(position).name;
+
+    @Override
+    public String getItem(int position) {
+        return arSrc.get(position).alphabet;
     }
+
     public String getItem2(int position){return arSrc.get(position).alphabet;}
+
     public long getItemId(int position){
         return position;
     }
@@ -42,7 +46,6 @@ public class MyListAdapter extends BaseAdapter {
 
 
     public View getView(int position, View convertView, ViewGroup parent){
-        final int pos=position;
         if(convertView==null)
         {
             convertView= Inflater.inflate(layout,parent,false);

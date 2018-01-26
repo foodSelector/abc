@@ -1,10 +1,7 @@
 package com.example.jisungkim.app;
 
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,12 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.CameraUpdateFactory;
@@ -42,21 +37,22 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
     String text3;
     String text4;
 
+    String name[]= {"A", "B","C","D"};
+
+    double lat[] = {37.5913103, 37.591361, 37.588369, 37.591079};
+    double lon[] = {127.0199425, 127.019481, 127.022764, 127.027215};
     int a;
-    private List<String> lat = new ArrayList<>();;
-    private List<String> lon = new ArrayList<>();;
+
 
     boolean clickCheck = false;
     @BindView(R.id.fab_gps) FloatingActionButton fab_gps;
 
     private static final String LOG_TAG = "LocationDemoActivity";
-    /*private MapPoint DEFAULT_MARKER_POINT = MapPoint.mapPointWithGeoCoord(lat, lon);*/
-    private static final MapPoint DEFAULT_MARKER_POINT1 = MapPoint.mapPointWithGeoCoord(37.5913103, 127.0199425);
-    private static final MapPoint DEFAULT_MARKER_POINT2 = MapPoint.mapPointWithGeoCoord(37.591361, 127.019481);
-    private static final MapPoint DEFAULT_MARKER_POINT3 = MapPoint.mapPointWithGeoCoord(37.588369, 127.022764);
-    private static final MapPoint DEFAULT_MARKER_POINT4 = MapPoint.mapPointWithGeoCoord(37.591079, 127.027215);
+
     private MapView mMapView;
     private MapPOIItem mDefaultMarker;
+
+
 
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         private final View mCalloutBalloon;
@@ -101,14 +97,11 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         mMapView.setMapViewEventListener(this);
         mMapView.setPOIItemEventListener(this);
         mMapView.setCurrentLocationEventListener(this);
-       createDefaultMarker1(mMapView);
-        createDefaultMarker2(mMapView);
-        createDefaultMarker4(mMapView);
-        createDefaultMarker3(mMapView);
+        createDefaultMarker(mMapView);
         showAll();
 
         Intent intent= getIntent();
-        ArrayList<MyItem> arItem=new ArrayList();
+        final ArrayList<MyItem> arItem=new ArrayList();
 
         String text = intent.getStringExtra("a1");
         String text2=intent.getStringExtra("a2");
@@ -121,7 +114,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         arItem.add(new MyItem("C",text3,"2인 2만원대"));
         arItem.add(new MyItem("D",text4,"2인 3만원대"));
 
-        MyListAdapter MyAdapter = new MyListAdapter(this, R.layout.list,arItem);
+        final MyListAdapter MyAdapter = new MyListAdapter(this, R.layout.list,arItem);
         final ListView MyList;
         MyList=(ListView) findViewById(R.id.list_item);
         MyList.setAdapter(MyAdapter);
@@ -138,11 +131,23 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
  * @param id 클릭 된 Item의 Id
  */
                 ImageButton btn = (ImageButton) view.findViewById(R.id.btn);
+
          if(btn.getVisibility()==View.INVISIBLE) {
+//지도마커 연동
+             MapPOIItem[] poiItems = mMapView.getPOIItems();
+
+             if(poiItems.length > 0) {
+                 mMapView.selectPOIItem(poiItems[position], false);
+             }
+
              btn.setVisibility(View.VISIBLE);
              btn.setFocusable(false);
          }
          else {
+             MapPOIItem[] poiItems = mMapView.getPOIItems();
+             if(poiItems.length > 0) {
+                 mMapView.deselectPOIItem(poiItems[position]);
+             }
              btn.setVisibility(View.INVISIBLE);
              btn.setFocusable(false);
          }
@@ -235,81 +240,32 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
 
 
     private void createDefaultMarker(MapView mapView) {
-        mDefaultMarker = new MapPOIItem();
-        String name = "오늘도나혼자밥";
-        mDefaultMarker.setItemName(name);
-        mDefaultMarker.setTag(0);
-        mDefaultMarker.setMapPoint(DEFAULT_MARKER_POINT1);
-        mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-
-        mapView.addPOIItem(mDefaultMarker);
-        mapView.selectPOIItem(mDefaultMarker, true);
-        mapView.setMapCenterPoint(DEFAULT_MARKER_POINT1, false);
-    }
 
 
-   private void createDefaultMarker1(MapView mapView) {
-        mDefaultMarker = new MapPOIItem();
-        String name = "오늘도나혼자밥";
-        mDefaultMarker.setItemName(name);
-        mDefaultMarker.setTag(0);
-        mDefaultMarker.setMapPoint(DEFAULT_MARKER_POINT1);
-        mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+        for(int i=0 ; i < 4 ; i++) {
 
-        mapView.addPOIItem(mDefaultMarker);
-        mapView.selectPOIItem(mDefaultMarker, true);
-        mapView.setMapCenterPoint(DEFAULT_MARKER_POINT1, false);
-    }
 
-    private void createDefaultMarker2(MapView mapView) {
-        mDefaultMarker = new MapPOIItem();
-        String name = "혼밥의 고수";
-        mDefaultMarker.setItemName(name);
-        mDefaultMarker.setTag(1);
-        mDefaultMarker.setMapPoint(DEFAULT_MARKER_POINT2);
-        mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+            mDefaultMarker = new MapPOIItem();
+            mDefaultMarker.setItemName(name[i]);
+            mDefaultMarker.setTag(i);
+            mDefaultMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(lat[i], lon[i]));
+            mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+            mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
 
-        mapView.addPOIItem(mDefaultMarker);
-        mapView.selectPOIItem(mDefaultMarker, true);
-        mapView.setMapCenterPoint(DEFAULT_MARKER_POINT2, false);
-    }
-    private void createDefaultMarker3(MapView mapView) {
-        mDefaultMarker = new MapPOIItem();
-        String name = "싸움의 고수";
-        mDefaultMarker.setItemName(name);
-        mDefaultMarker.setTag(2);
-        mDefaultMarker.setMapPoint(DEFAULT_MARKER_POINT3);
-        mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-
-        mapView.addPOIItem(mDefaultMarker);
-        mapView.selectPOIItem(mDefaultMarker, true);
-        mapView.setMapCenterPoint(DEFAULT_MARKER_POINT3, false);
-    }
-    private void createDefaultMarker4(MapView mapView) {
-        mDefaultMarker = new MapPOIItem();
-        String name = "혼밥혼밥";
-        mDefaultMarker.setItemName(name);
-        mDefaultMarker.setTag(3);
-        mDefaultMarker.setMapPoint(DEFAULT_MARKER_POINT4);
-        mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-        mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-
-        mapView.addPOIItem(mDefaultMarker);
-        mapView.selectPOIItem(mDefaultMarker, true);
-        mapView.setMapCenterPoint(DEFAULT_MARKER_POINT4, false);
+            mapView.addPOIItem(mDefaultMarker);
+            mapView.selectPOIItem(mDefaultMarker, true);
+            mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(lat[i], lon[i]), false);
+        }
     }
 
     private void showAll() {
         int padding = 20;
         float minZoomLevel = 7;
         float maxZoomLevel = 10;
-        MapPointBounds bounds = new MapPointBounds(DEFAULT_MARKER_POINT1, DEFAULT_MARKER_POINT1);
+        MapPointBounds bounds = new MapPointBounds(MapPoint.mapPointWithGeoCoord(lat[0], lon[0]), MapPoint.mapPointWithGeoCoord(lat[3], lon[3]));
         mMapView.moveCamera(CameraUpdateFactory.newMapPointBounds(bounds, padding, minZoomLevel, maxZoomLevel));
     }
+
 
     @Override
     public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {}
@@ -352,12 +308,13 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {}
 
+    public void findPOIItemByTag(int tag){
+        mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.RedPin);
+    }
+
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
-            mMapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-            mapView.addPOIItem(mDefaultMarker);
-            mapView.selectPOIItem(mDefaultMarker, true);
-            mapView.setMapCenterPoint(DEFAULT_MARKER_POINT1, false);
+
     }
 
     @Override

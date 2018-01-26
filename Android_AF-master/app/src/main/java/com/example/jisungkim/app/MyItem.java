@@ -9,12 +9,18 @@ public class MyItem {
     String name;
     String name2;
 
-    MyItem(String aAlphabet, String aName, String aName2){
+    public MyItem(String aAlphabet, String aName, String aName2){
 
-        alphabet=aAlphabet;
-        name =aName;
-        name2=aName2;
+        alphabet = aAlphabet;
+        name = aName;
+        name2 = aName2;
+
     }
+
+    public String getData(){
+        return alphabet;
+    }
+
 
 
 }
