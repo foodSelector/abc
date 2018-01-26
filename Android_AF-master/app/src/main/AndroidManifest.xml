@@ -33,7 +33,9 @@
             android:label="@string/map_view_demo_title"/>
         <activity android:name=".Date" />
         <activity android:name=".Friend" />
-        <activity android:name=".Family"></activity>
+        <activity android:name=".Family"/>
+        <activity android:name=".WebView_java">
+        </activity>
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

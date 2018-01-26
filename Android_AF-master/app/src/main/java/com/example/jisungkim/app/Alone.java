@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -34,6 +35,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
 
     ArrayList<MyItem> arItem;
 
+    String[] alpha = {"A", "B", "C", "D"};
     double lat[] = {37.5913103, 37.591361, 37.588369, 37.591079};
     double lon[] = {127.0199425, 127.019481, 127.022764, 127.027215};
 
@@ -159,7 +161,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
 
     public void mmOnClick(View v){
         ImageButton btn=(ImageButton)findViewById(R.id.btn);
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("https://store.naver.com/restaurants/detail?id=1630366010"));
+        Intent intent=new Intent(this, WebView_java.class);
         startActivity(intent);
     }
 
@@ -215,11 +217,10 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
 
 
     private void createDefaultMarker(MapView mapView) {
-        String[] name = new String[4];
 
         for(int i=0 ; i < 4 ; i++) {
             mDefaultMarker = new MapPOIItem();
-            mDefaultMarker.setItemName(name[i]);
+            mDefaultMarker.setItemName(alpha[i]);
             mDefaultMarker.setTag(i);
             mDefaultMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(lat[i], lon[i]));
             mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
