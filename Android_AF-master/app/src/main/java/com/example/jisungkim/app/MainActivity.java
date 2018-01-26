@@ -54,10 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.alone:
                 i = new Intent(this, Alone.class);
-                i.putExtra("a1",msg);
-                i.putExtra("a2","혼밥의 고수");
-                i.putExtra("a3","오늘도나혼자밥");
-                i.putExtra("a4","혼밥혼밥");
+                for(int index = 0 ; index < 4 ; index++)
+                i.putExtra(String.valueOf(index),msg);
                 startActivity(i);
                 break;
             case R.id.date:

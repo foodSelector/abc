@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,27 +33,16 @@ import butterknife.ButterKnife;
 public class Alone extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener, MapView.POIItemEventListener {
 
     ArrayList<MyItem> arItem;
-    String text;
-    String text2;
-    String text3;
-    String text4;
-
-    String name[]= {"A", "B","C","D"};
 
     double lat[] = {37.5913103, 37.591361, 37.588369, 37.591079};
     double lon[] = {127.0199425, 127.019481, 127.022764, 127.027215};
-    int a;
 
 
-    boolean clickCheck = false;
     @BindView(R.id.fab_gps) FloatingActionButton fab_gps;
-
-    private static final String LOG_TAG = "LocationDemoActivity";
 
     private MapView mMapView;
     private MapPOIItem mDefaultMarker;
-
-
+    public String[] name;
 
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         private final View mCalloutBalloon;
@@ -85,6 +75,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         getSupportActionBar().setTitle("맛집GO!");
 
         ButterKnife.bind(this);
+        name = new String[4];
 
         fab_gps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +83,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
                 mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
             }
         });
+
         mMapView = (MapView) findViewById(R.id.map_view);
         mMapView.setDaumMapApiKey(MapApiConst.DAUM_MAPS_ANDROID_APP_API_KEY);
         mMapView.setMapViewEventListener(this);
@@ -100,19 +92,13 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         createDefaultMarker(mMapView);
         showAll();
 
-        Intent intent= getIntent();
-        final ArrayList<MyItem> arItem=new ArrayList();
+        arItem=new ArrayList();
 
-        String text = intent.getStringExtra("a1");
-        String text2=intent.getStringExtra("a2");
-        String text3=intent.getStringExtra("a3");
-        String text4=intent.getStringExtra("a4");
-
-
-        arItem.add(new MyItem("A",text,"2인 2만원대"));
-        arItem.add(new MyItem("B",text2,"2인 1만원대"));
-        arItem.add(new MyItem("C",text3,"2인 2만원대"));
-        arItem.add(new MyItem("D",text4,"2인 3만원대"));
+        for(int index=0 ; index < 4 ; index++) {
+            Intent intent = getIntent();
+            name[index] = (String)intent.getStringExtra(String.valueOf(index));
+            arItem.add(new MyItem("A",name[index],"2인 2만원대"));
+        }
 
         final MyListAdapter MyAdapter = new MyListAdapter(this, R.layout.list,arItem);
         final ListView MyList;
@@ -131,11 +117,9 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
  * @param id 클릭 된 Item의 Id
  */
                 ImageButton btn = (ImageButton) view.findViewById(R.id.btn);
-
          if(btn.getVisibility()==View.INVISIBLE) {
 //지도마커 연동
              MapPOIItem[] poiItems = mMapView.getPOIItems();
-
              if(poiItems.length > 0) {
                  mMapView.selectPOIItem(poiItems[position], false);
              }
@@ -172,6 +156,7 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
         mMapView.setShowCurrentLocationMarker(false);
     }
+
     public void mmOnClick(View v){
         ImageButton btn=(ImageButton)findViewById(R.id.btn);
         Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("https://store.naver.com/restaurants/detail?id=1630366010"));
@@ -179,16 +164,16 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
     }
 
     public void mOnClick(View v){
+        arItem.clear();
 
         switch(v.getId()){
 
+
             case R.id.rankbtn:
-                arItem=new ArrayList<MyItem>();
-                MyItem mi1;
-                mi1=new MyItem("A",text2,"2인 3만원대");arItem.add(mi1);
-                mi1=new MyItem("B",text,"2인 2만원대");arItem.add(mi1);
-                mi1=new MyItem("C",text4,"2인 1만원대");arItem.add(mi1);
-                mi1=new MyItem("D",text3,"2인 2만원대");arItem.add(mi1);
+
+                for(int index=0 ; index < 4 ; index++) {
+                    arItem.add(new MyItem("A",name[index],"2인 2만원대"));
+                }
 
                 MyListAdapter MyAdapter1 = new MyListAdapter(this, R.layout.list,arItem);
                 ListView MyList1;
@@ -197,12 +182,9 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
                 break;
 
             case R.id.lengthbtn:
-                arItem=new ArrayList<MyItem>();
-                MyItem mi2;
-                mi2=new MyItem("A",text3,"2인 5만원대");arItem.add(mi2);
-                mi2=new MyItem("B",text,"2인 3만원대");arItem.add(mi2);
-                mi2=new MyItem("C",text2,"2인 1만원대");arItem.add(mi2);
-                mi2=new MyItem("D",text4,"2인 2만원대");arItem.add(mi2);
+                for(int index=0 ; index < 4 ; index++) {
+                    arItem.add(new MyItem("B",name[index],"2인 2만원대"));
+                }
 
                 MyListAdapter MyAdapter2 = new MyListAdapter(this, R.layout.list,arItem);
                 ListView MyList2;
@@ -211,27 +193,20 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
                 break;
 
             case R.id.pricebtn:
-                arItem=new ArrayList<MyItem>();
-                MyItem mi3;
-                mi3=new MyItem("A",text3,"2인 3만원대");arItem.add(mi3);
-                mi3=new MyItem("B",text4,"2인 6만원대");arItem.add(mi3);
-                mi3=new MyItem("C",text,"2인 2만원대");arItem.add(mi3);
-                mi3=new MyItem("D",text2,"2인 2만원대");arItem.add(mi3);
-
+                for(int index=0 ; index < 4 ; index++) {
+                    arItem.add(new MyItem("C",name[index],"2인 2만원대"));
+                }
                 MyListAdapter MyAdapter3 = new MyListAdapter(this, R.layout.list,arItem);
                 ListView MyList3;
                 MyList3=(ListView) findViewById(R.id.list_item);
                 MyList3.setAdapter(MyAdapter3);
                 break;
-
-
         }
-
     }
-       @Override
+
+    @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
-        Log.i(LOG_TAG, String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
     }
 
     @Override
@@ -240,17 +215,16 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
 
 
     private void createDefaultMarker(MapView mapView) {
-
+        String[] name = new String[4];
 
         for(int i=0 ; i < 4 ; i++) {
-
-
             mDefaultMarker = new MapPOIItem();
             mDefaultMarker.setItemName(name[i]);
             mDefaultMarker.setTag(i);
             mDefaultMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(lat[i], lon[i]));
             mDefaultMarker.setMarkerType(MapPOIItem.MarkerType.BluePin);
             mDefaultMarker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
+            
 
             mapView.addPOIItem(mDefaultMarker);
             mapView.selectPOIItem(mDefaultMarker, true);
@@ -295,7 +269,6 @@ public class Alone extends AppCompatActivity implements MapView.CurrentLocationE
     @Override
     public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {
         mMapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-
     }
 
     @Override
